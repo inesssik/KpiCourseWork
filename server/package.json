@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc --noEmit && eslint . && tsx src/index.ts",
+    "dev": "nodemon -e ts,js,tsx --exec \"npm run start\""
   },
   "keywords": [],
   "author": "",
@@ -14,17 +15,22 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-fileupload": "^1.5.1",
     "globals": "^16.1.0",
     "pg": "^8.15.6",
     "sequelize": "^6.37.7",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.0"
+    "typescript-eslint": "^8.32.0",
+    "uuid": "^11.1.0"
   },
   "type": "module",
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
-    "@types/node": "^22.15.14"
+    "@types/express-fileupload": "^1.5.1",
+    "@types/node": "^22.15.14",
+    "@types/uuid": "^10.0.0",
+    "nodemon": "^3.1.10"
   }
 }
