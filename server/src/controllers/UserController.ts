@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import ApiError from "../error/ApiError.js";
 
 class UserController {
     async registration(req: Request, res: Response) {
@@ -9,9 +10,13 @@ class UserController {
 
     }
 
-    async check(req: Request, res: Response) {
-
+    async check(req: Request, res: Response, next: NextFunction) {
+        const { id } = req.query;
+        if (!id) {
+            return next(ApiError.badRequest('Bad Request!'));
+        }
+        res.json(id);
     }
 }
 
-export default UserController;
+export default new UserController();
