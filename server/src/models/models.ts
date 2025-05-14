@@ -1,83 +1,249 @@
-import sequelize from "../db.js";
-import { DataTypes } from "sequelize";
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    PrimaryKey,
+    AutoIncrement,
+    Unique,
+    AllowNull,
+    Default,
+    HasOne,
+    BelongsTo,
+    ForeignKey,
+    HasMany,
+    BelongsToMany
+} from 'sequelize-typescript';
+import {
+    HasOneCreateAssociationMixin,
+    // HasManyAddAssociationMixin,
+    // HasManyGetAssociationsMixin,
+    BelongsToCreateAssociationMixin
+} from 'sequelize';
 
-const User = sequelize.define('user', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    email: { type: DataTypes.STRING, unique: true, allowNull: false },
-    password: { type: DataTypes.STRING, allowNull: false },
-    role: { type: DataTypes.STRING, defaultValue: 'USER', allowNull: false }
-});
+@Table({ tableName: 'users' })
+export class User extends Model<User> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
 
-const Basket = sequelize.define('basket', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
-});
+    @Unique
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare email: string;
 
-const BasketDevice = sequelize.define('basket_device', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
-});
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare password: string;
 
-const Device = sequelize.define('device', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, unique: true, allowNull: false },
-    price: { type: DataTypes.INTEGER, allowNull: false },
-    rating: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false },
-    img: { type: DataTypes.STRING, allowNull: false }
-});
+    @Default('USER')
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare role: string;
 
-const Type = sequelize.define('type', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, unique: true, allowNull: false }
-});
+    // Association mixins for User -> Basket
+    declare createBasket: HasOneCreateAssociationMixin<Basket>;
+    declare getBasket: HasOneCreateAssociationMixin<Basket>;
 
-const Brand = sequelize.define('brand', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, unique: true, allowNull: false }
-});
+    @HasOne(() => Basket)
+    declare basket: Basket;
 
-const Rating = sequelize.define('rating', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    rate: { type: DataTypes.INTEGER, allowNull: false }
-});
+    @HasMany(() => Rating)
+    declare ratings: Rating[];
+}
 
-const DeviceInfo = sequelize.define('device_info', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    title: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING, allowNull: false }
-});
+@Table({ tableName: 'baskets' })
+export class Basket extends Model<Basket> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
 
-const TypeBrand = sequelize.define('type_brand', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
-});
+    @ForeignKey(() => User)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare userId: number;
 
-User.hasOne(Basket);
-Basket.belongsTo(User);
+    // Association mixins for Basket -> User
+    declare createUser: BelongsToCreateAssociationMixin<User>;
+    declare getUser: BelongsToCreateAssociationMixin<User>;
 
-User.hasMany(Rating);
-Rating.belongsTo(User);
+    @BelongsTo(() => User)
+    declare user: User;
 
-Basket.hasMany(BasketDevice);
-BasketDevice.belongsTo(Basket);
+    @HasMany(() => BasketDevice)
+    declare basketDevices: BasketDevice[];
+}
 
-Type.hasMany(Device);
-Device.belongsTo(Brand);
+@Table({ tableName: 'basket_devices' })
+export class BasketDevice extends Model<BasketDevice> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
 
-Device.hasMany(BasketDevice);
-BasketDevice.belongsTo(Device);
+    @ForeignKey(() => Basket)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare basketId: number;
 
-Device.hasMany(DeviceInfo, { as: 'info' });
-DeviceInfo.belongsTo(Device);
+    @BelongsTo(() => Basket)
+    declare basket: Basket;
 
-Type.belongsToMany(Brand, { through: TypeBrand });
-Brand.belongsToMany(Type, { through: TypeBrand });
+    @ForeignKey(() => Device)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare deviceId: number;
 
-export {
-    User,
-    Basket,
-    BasketDevice,
-    Device,
-    DeviceInfo,
-    Brand,
-    Type,
-    TypeBrand,
-    Rating
-};
+    @BelongsTo(() => Device)
+    declare device: Device;
+}
+
+@Table({ tableName: 'devices' })
+export class Device extends Model<Device> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
+
+    @Unique
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare name: string;
+
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare price: number;
+
+    @Default(0)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare rating: number;
+
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare img: string;
+
+    @ForeignKey(() => Type)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare typeId: number;
+
+    @BelongsTo(() => Type)
+    declare type: Type;
+
+    @ForeignKey(() => Brand)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare brandId: number;
+
+    @BelongsTo(() => Brand)
+    declare brand: Brand;
+
+    @HasMany(() => DeviceInfo)
+    declare info: DeviceInfo[];
+
+    @HasMany(() => BasketDevice)
+    declare basketDevices: BasketDevice[];
+}
+
+@Table({ tableName: 'types' })
+export class Type extends Model<Type> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
+
+    @Unique
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare name: string;
+
+    @HasMany(() => Device)
+    declare devices: Device[];
+
+    @BelongsToMany(() => Brand, () => TypeBrand)
+    declare brands: Brand[];
+}
+
+@Table({ tableName: 'brands' })
+export class Brand extends Model<Brand> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
+
+    @Unique
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare name: string;
+
+    @HasMany(() => Device)
+    declare devices: Device[];
+
+    @BelongsToMany(() => Type, () => TypeBrand)
+    declare types: Type[];
+}
+
+@Table({ tableName: 'ratings' })
+export class Rating extends Model<Rating> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
+
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare rate: number;
+
+    @ForeignKey(() => User)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare userId: number;
+
+    @BelongsTo(() => User)
+    declare user: User;
+}
+
+@Table({ tableName: 'device_infos' })
+export class DeviceInfo extends Model<DeviceInfo> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
+
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare title: string;
+
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    declare description: string;
+
+    @ForeignKey(() => Device)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare deviceId: number;
+
+    @BelongsTo(() => Device)
+    declare device: Device;
+}
+
+@Table({ tableName: 'type_brands' })
+export class TypeBrand extends Model<TypeBrand> {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: number;
+
+    @ForeignKey(() => Type)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare typeId: number;
+
+    @ForeignKey(() => Brand)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    declare brandId: number;
+}

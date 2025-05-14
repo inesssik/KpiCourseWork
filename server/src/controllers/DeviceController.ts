@@ -12,6 +12,7 @@ class DeviceController {
         try {
             const { name, price, brandId, typeId, info } = req.body;
             const img = req.files.img as fileUpload.UploadedFile;
+            if (await Device.findOne({ where: { name: String(name) } })) return next(ApiError.badRequest('Девайс вже існує!'));
             const fileName = v4() + '.jpg';
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
 

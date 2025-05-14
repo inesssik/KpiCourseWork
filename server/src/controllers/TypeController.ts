@@ -6,12 +6,9 @@ import { NextFunction, Request, Response } from "express";
 class TypeController {
     async create(req: Request, res: Response, next: NextFunction) {
         const { name } = req.query;
-
-        if(!name) {
-            return next(ApiError.badRequest('No name!'));
-        }
-
-        const type = await Type.create({ name });
+        if (!name) return next(ApiError.badRequest('Введіть ім`я!'));
+        if (await Type.findOne({ where: { name: String(name) } })) return next(ApiError.badRequest('Тип вже існує!'));
+        const type = await Type.create({ name: String(name) });
         res.json(type);
     }
 

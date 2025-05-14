@@ -1,16 +1,19 @@
 {
-  "compilerOptions": {
-      "module": "NodeNext",
-      "moduleResolution": "NodeNext",
-      "target": "ES2023",
-      "sourceMap": true,
-      "outDir": "dist",
-      "skipLibCheck": true
-  },
-  "include": [
-      "src/**/*"
-  ],
-  "exclude": [
-      "server/node_modules/**/*"
-  ]
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ES2023",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "skipLibCheck": true,
+        "typeRoots": ["./node_modules/@types", "./src/types"]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "server/node_modules/**/*"
+    ]
 }

@@ -2,8 +2,8 @@ import 'dotenv/config';
 import sequelize from './db.js';
 import express from 'express';
 import cors from 'cors';
-import router from './routes/index.js';
-import errorHandler from './middleware/ErrorHandlingMiddleware.js';
+import router from './routes/ApiRouter.js';
+import errorHandler from './middleware/errorHandlingMiddleware.js';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 

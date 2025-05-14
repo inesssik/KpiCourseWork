@@ -16,8 +16,12 @@ class ApiError extends Error {
         return new ApiError(500, message);
     }
 
-    public static forbidden(message: string){
+    public static forbidden(message: string = "Недостатньо прав!"){
         return new ApiError(403, message);
+    }
+
+    public static unauthorized(message: string = "Не авторизований!"){
+        return new ApiError(401, message);
     }
 }
 
