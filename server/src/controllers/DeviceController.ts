@@ -16,18 +16,19 @@ class DeviceController {
             const fileName = v4() + '.jpg';
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
 
+            const device = await Device.create({ name, price, brandId, typeId, img: fileName });
+
             if (info) {
                 const parsedInfo = JSON.parse(info);
                 parsedInfo.forEach((i: any) => {
                     DeviceInfo.create({
                         title: i.title,
                         description: i.description,
-                        deviceId: i.deviceId
+                        deviceId: device.id
                     });
                 });
             }
 
-            const device = await Device.create({ name, price, brandId, typeId, info, img: fileName });
             res.json(device);
         } catch (error) {
             console.log(error);

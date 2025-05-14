@@ -4,7 +4,7 @@ import { Brand } from "../models/models.js";
 
 class BrandController {
     async create(req: Request, res: Response, next: NextFunction) {
-        const { name } = req.query;
+        const { name } = req.body;
         if (!name) return next(ApiError.badRequest('Введіть ім`я!'));
         if (await Brand.findOne({ where: { name: String(name) } })) return next(ApiError.badRequest('Бренд вже існує!'));
         const brand = await Brand.create({ name: String(name) });
