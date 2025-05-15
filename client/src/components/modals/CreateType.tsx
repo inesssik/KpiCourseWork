@@ -1,22 +1,25 @@
-import React, {useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Modal from "react-bootstrap/Modal";
-import {Form, Button} from "react-bootstrap";
-import {createType} from "../../http/deviceAPI";
+import { Form, Button } from "react-bootstrap";
+import { createType, fetchBrands, fetchTypes } from "../../http/deviceAPI";
+import { ModalProps } from '../../pages/Admin';
+import { Context } from '../..';
+import { observer } from 'mobx-react-lite';
 
-interface CreateTypeProps {
-    show: boolean;
-    onHide: () => void;
-}
+const CreateType = observer(({ show, onHide }: ModalProps) => {
+    const [value, setValue] = useState('');
+    const { device } = useContext(Context);
 
-const CreateType = ({ show, onHide }: CreateTypeProps) => {
-    const [value, setValue] = useState('')
+    useEffect(() => {
+        fetchTypes().then(data => device.setTypes(data));
+    }, [show]);
 
     const addType = () => {
-        createType({name: value}).then(data => {
-            setValue('')
-            onHide()
-        })
-    }
+        createType({ name: value }).then(() => {
+            setValue('');
+            onHide();
+        });
+    };
 
     return (
         <Modal
@@ -26,7 +29,7 @@ const CreateType = ({ show, onHide }: CreateTypeProps) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Добавить тип
+                    Добавити тип
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -39,11 +42,11 @@ const CreateType = ({ show, onHide }: CreateTypeProps) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-                <Button variant="outline-success" onClick={addType}>Добавить</Button>
+                <Button variant="outline-danger" onClick={onHide}>Закрити</Button>
+                <Button variant="outline-success" onClick={addType}>Добавити</Button>
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default CreateType;

@@ -18,7 +18,6 @@ class UserController {
 
         const hashPassword = await bcrypt.hash(String(password), 5);
         const user = await User.create({ email, role, password: hashPassword });
-        await user.createBasket();
         const token = generateJwt(user.id, user.email, user.role);
         res.json({ token });
     }

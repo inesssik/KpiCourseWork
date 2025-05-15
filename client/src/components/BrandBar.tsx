@@ -4,7 +4,7 @@ import { Context } from "../index";
 import { Card, Row } from "react-bootstrap";
 
 const BrandBar = observer(() => {
-    const { device } = useContext(Context)
+    const { device } = useContext(Context);
 
     return (
         <Row className="d-flex">

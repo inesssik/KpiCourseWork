@@ -1,6 +1,5 @@
-import UserController from '../controllers/UserController.js';
-
 import { Router } from 'express';
+import UserController from '../controllers/UserController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 const router = Router();
 

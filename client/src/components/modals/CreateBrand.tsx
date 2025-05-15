@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Modal from "react-bootstrap/Modal";
 import { Button, Form } from "react-bootstrap";
-import { createBrand } from "../../http/deviceAPI";
+import { createBrand, fetchBrands, fetchTypes } from "../../http/deviceAPI";
+import { ModalProps } from '../../pages/Admin';
+import { observer } from 'mobx-react-lite';
+import { Context } from '../..';
 
-interface CreateBrandProps {
-    show: boolean;
-    onHide: () => void;
-}
+const CreateBrand = observer(({ show, onHide }: ModalProps) => {
+    const [value, setValue] = useState('');
+    const { device } = useContext(Context);
 
-const CreateBrand = ({ show, onHide }: CreateBrandProps) => {
-    const [value, setValue] = useState('')
+    useEffect(() => {
+        fetchBrands().then(data => device.setBrands(data));
+    }, [show]);
 
     const addBrand = () => {
-        createBrand({ name: value }).then(data => {
-            setValue('')
-            onHide()
-        })
-    }
+        createBrand({ name: value }).then(() => {
+            setValue('');
+            onHide();
+        });
+    };
+
     return (
         <Modal
             show={show}
@@ -25,7 +29,7 @@ const CreateBrand = ({ show, onHide }: CreateBrandProps) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Добавить тип
+                    Добавити бренд
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -38,11 +42,11 @@ const CreateBrand = ({ show, onHide }: CreateBrandProps) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-                <Button variant="outline-success" onClick={addBrand}>Добавить</Button>
+                <Button variant="outline-danger" onClick={onHide}>Закрити</Button>
+                <Button variant="outline-success" onClick={addBrand}>Добавити</Button>
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default CreateBrand;

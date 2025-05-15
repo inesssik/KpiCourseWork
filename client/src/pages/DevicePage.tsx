@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
-import bigStar from '../assets/bigStar.png'
-import { useParams } from 'react-router-dom'
+import bigStar from '../assets/bigStar.png';
+import { useParams } from 'react-router-dom';
 import { fetchOneDevice } from "../http/deviceAPI";
 import { IDevice } from '../store/DeviceStore';
 
@@ -9,15 +9,16 @@ const DevicePage = () => {
     const [device, setDevice] = useState<IDevice>({
         id: 0,
         name: '',
-        rating: 0,
         img: '',
         price: 0,
-        info: []
-    })
-    const { id } = useParams()
+        info: [],
+        typeId: 0,
+        brandId: 0
+    });
+    const { id } = useParams();
     useEffect(() => {
-        fetchOneDevice(Number(id)).then(data => setDevice(data))
-    }, [])
+        fetchOneDevice(Number(id)).then(data => setDevice(data));
+    }, []);
 
     return (
         <Container className="mt-3">
@@ -28,12 +29,6 @@ const DevicePage = () => {
                 <Col md={4}>
                     <Row className="d-flex flex-column align-items-center">
                         <h2>{device.name}</h2>
-                        <div
-                            className="d-flex align-items-center justify-content-center"
-                            style={{ background: `url(${bigStar}) no-repeat center center`, width: 240, height: 240, backgroundSize: 'cover', fontSize: 64 }}
-                        >
-                            {device.rating}
-                        </div>
                     </Row>
                 </Col>
                 <Col md={4}>

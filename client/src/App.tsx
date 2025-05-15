@@ -5,21 +5,23 @@ import { Spinner } from 'react-bootstrap';
 import NavBar from './components/NavBar';
 import { Context } from '.';
 import { check } from './http/userAPI';
+import { IUser } from './store/UserStore';
 
 const App = () => {
-    const { user } = useContext(Context)
-    const [loading, setLoading] = useState(true)
+    const { user } = useContext(Context);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        check().then(data => {
-            user.setUser(true)
-            user.setIsAuth(true)
-        }).finally(() => setLoading(false))
-    }, [])
+        check().then((data: IUser) => {
+            user.setUser(data);
+            user.setIsAuth(true);
+        }).finally(() => setLoading(false));
+    }, []);
 
     if (loading) {
-        return <Spinner animation={"grow"} />
+        return <Spinner animation={"grow"} />;
     }
+    
     return (
         <BrowserRouter>
             <NavBar />

@@ -2,53 +2,49 @@ import React, { useContext, useEffect, useState } from 'react';
 import Modal from "react-bootstrap/Modal";
 import { Button, Dropdown, Form, Row, Col } from "react-bootstrap";
 import { Context } from "../../index";
-import { createDevice, fetchBrands, fetchDevices, fetchTypes } from "../../http/deviceAPI";
+import { createDevice, fetchBrands, fetchTypes } from "../../http/deviceAPI";
 import { observer } from "mobx-react-lite";
 import { IInfo } from '../../store/DeviceStore';
+import { ModalProps } from '../../pages/Admin';
 
-interface CreateDeviceProps {
-    show: boolean;
-    onHide: () => void;
-}
-
-const CreateDevice = observer(({ show, onHide }: CreateDeviceProps) => {
-    const { device } = useContext(Context)
-    const [name, setName] = useState('')
-    const [price, setPrice] = useState(0)
+const CreateDevice = observer(({ show, onHide }: ModalProps) => {
+    const { device } = useContext(Context);
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(0);
     const [file, setFile] = useState(new Blob());
-    const [info, setInfo] = useState([] as IInfo[])
+    const [info, setInfo] = useState([] as IInfo[]);
 
     useEffect(() => {
-        fetchTypes().then(data => device.setTypes(data))
-        fetchBrands().then(data => device.setBrands(data))
-    }, [])
+        fetchTypes().then(data => device.setTypes(data));
+        fetchBrands().then(data => device.setBrands(data));
+    }, [show]);
 
     const addInfo = () => {
-        setInfo([...info, { title: '', description: '', number: Date.now() }])
-    }
+        setInfo([...info, { title: '', description: '', number: Date.now() }]);
+    };
 
     const removeInfo = (number: number) => {
-        setInfo(info.filter(i => i.number !== number))
-    }
+        setInfo(info.filter(i => i.number !== number));
+    };
 
     const changeInfo = (key: string, value: string, number: number) => {
-        setInfo(info.map(i => i.number === number ? { ...i, [key]: value } : i))
-    }
+        setInfo(info.map(i => i.number === number ? { ...i, [key]: value } : i));
+    };
 
     const selectFile = (e: any) => {
-        setFile(e.target.files[0])
-    }
+        setFile(e.target.files[0]);
+    };
 
     const addDevice = () => {
-        const formData = new FormData()
-        formData.append('name', name)
-        formData.append('price', `${price}`)
-        formData.append('img', file)
-        formData.append('brandId', device.selectedBrand.id?.toString() || '')
-        formData.append('typeId', device.selectedType.id?.toString() || '')
-        formData.append('info', JSON.stringify(info))
-        createDevice(formData).then(data => onHide())
-    }
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('price', `${price}`);
+        formData.append('img', file);
+        formData.append('brandId', device.selectedBrand.id?.toString() || '');
+        formData.append('typeId', device.selectedType.id?.toString() || '');
+        formData.append('info', JSON.stringify(info));
+        createDevice(formData).then(() => onHide());
+    };
 
     return (
         <Modal
@@ -58,7 +54,7 @@ const CreateDevice = observer(({ show, onHide }: CreateDeviceProps) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Добавить устройство
+                    Добавити девайс
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -77,7 +73,7 @@ const CreateDevice = observer(({ show, onHide }: CreateDeviceProps) => {
                         </Dropdown.Menu>
                     </Dropdown>
                     <Dropdown className="mt-2 mb-2">
-                        <Dropdown.Toggle>{device.selectedBrand.name || "Виберіть тип"}</Dropdown.Toggle>
+                        <Dropdown.Toggle>{device.selectedBrand.name || "Виберіть бренд"}</Dropdown.Toggle>
                         <Dropdown.Menu>
                             {device.brands.map(brand =>
                                 <Dropdown.Item
@@ -112,7 +108,7 @@ const CreateDevice = observer(({ show, onHide }: CreateDeviceProps) => {
                         variant={"outline-dark"}
                         onClick={addInfo}
                     >
-                        Добавить новое свойство
+                        Добавити нову властивість
                     </Button>
                     {info.map(i =>
                         <Row className="mt-4" key={i.number}>
@@ -143,8 +139,8 @@ const CreateDevice = observer(({ show, onHide }: CreateDeviceProps) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-                <Button variant="outline-success" onClick={addDevice}>Добавить</Button>
+                <Button variant="outline-danger" onClick={onHide}>Закрити</Button>
+                <Button variant="outline-success" onClick={addDevice}>Добавити</Button>
             </Modal.Footer>
         </Modal>
     );

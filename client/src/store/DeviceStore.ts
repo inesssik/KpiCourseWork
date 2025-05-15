@@ -2,7 +2,7 @@ import { observable, action, computed, makeObservable } from 'mobx';
 
 export interface IType { id?: number; name: string }
 export interface IBrand { id?: number; name: string }
-export interface IDevice { id?: number; name: string, rating: number, img: string, price: number, info: IInfo[] }
+export interface IDevice { id?: number; name: string, img: string, price: number, info: IInfo[], typeId: number, brandId: number }
 export interface IInfo {id?: string, title: string, description: string, number: number }
 
 export default class DeviceStore {
@@ -17,6 +17,7 @@ export default class DeviceStore {
     @observable private _devices: IDevice[] = [];
     @observable private _selectedType: IType = {} as IType;
     @observable private _selectedBrand: IBrand = {} as IBrand;
+    @observable private _selectedDevice: IDevice = {} as IDevice;
     @observable private _page: number = 1;
     @observable private _totalCount: number = 0;
     @observable private _limit: number = 3;
@@ -47,6 +48,11 @@ export default class DeviceStore {
         this._selectedBrand = brand;
     }
 
+    @action public setSelectedDevice(device: IDevice) {
+        this.setPage(1);
+        this._selectedDevice = device;
+    }
+
     @action public setPage(page: number) {
         this._page = page;
     }
@@ -73,6 +79,10 @@ export default class DeviceStore {
 
     @computed public get selectedBrand(): IBrand {
         return this._selectedBrand;
+    }
+
+    @computed public get selectedDevice(): IDevice {
+        return this._selectedDevice;
     }
 
     @computed public get page(): number {

@@ -14,23 +14,23 @@ import { IBrand } from '../store/DeviceStore';
 import { IDevice } from '../store/DeviceStore';
 
 const Shop = observer(() => {
-    const { device } = useContext(Context)
+    const { device } = useContext(Context);
 
     useEffect(() => {
-        fetchTypes().then((data: IType[]) => device.setTypes(data))
-        fetchBrands().then((data: IBrand[]) => device.setBrands(data))
+        fetchTypes().then((data: IType[]) => device.setTypes(data));
+        fetchBrands().then((data: IBrand[]) => device.setBrands(data));
         fetchDevices(null, null, 1, 2).then((data: { rows: IDevice[]; count: number; }) => {
-            device.setDevices(data.rows)
-            device.setTotalCount(data.count)
-        })
-    }, [])
+            device.setDevices(data.rows);
+            device.setTotalCount(data.count);
+        });
+    }, []);
 
     useEffect(() => {
         fetchDevices(device.selectedType.id ?? null, device.selectedBrand.id ?? null, device.page, 2).then((data: { rows: IDevice[]; count: number; }) => {
-            device.setDevices(data.rows)
-            device.setTotalCount(data.count)
-        })
-    }, [device.page, device.selectedType, device.selectedBrand,])
+            device.setDevices(data.rows);
+            device.setTotalCount(data.count);
+        });
+    }, [device.page, device.selectedType, device.selectedBrand,]);
 
     return (
         <Container>

@@ -8,18 +8,11 @@ import {
     Unique,
     AllowNull,
     Default,
-    HasOne,
     BelongsTo,
     ForeignKey,
     HasMany,
     BelongsToMany
 } from 'sequelize-typescript';
-import {
-    HasOneCreateAssociationMixin,
-    // HasManyAddAssociationMixin,
-    // HasManyGetAssociationsMixin,
-    BelongsToCreateAssociationMixin
-} from 'sequelize';
 
 @Table({ tableName: 'users' })
 export class User extends Model<User> {
@@ -41,63 +34,6 @@ export class User extends Model<User> {
     @AllowNull(false)
     @Column(DataType.STRING)
     declare role: string;
-
-    // Association mixins for User -> Basket
-    declare createBasket: HasOneCreateAssociationMixin<Basket>;
-    declare getBasket: HasOneCreateAssociationMixin<Basket>;
-
-    @HasOne(() => Basket)
-    declare basket: Basket;
-
-    @HasMany(() => Rating)
-    declare ratings: Rating[];
-}
-
-@Table({ tableName: 'baskets' })
-export class Basket extends Model<Basket> {
-    @PrimaryKey
-    @AutoIncrement
-    @Column(DataType.INTEGER)
-    declare id: number;
-
-    @ForeignKey(() => User)
-    @AllowNull(false)
-    @Column(DataType.INTEGER)
-    declare userId: number;
-
-    // Association mixins for Basket -> User
-    declare createUser: BelongsToCreateAssociationMixin<User>;
-    declare getUser: BelongsToCreateAssociationMixin<User>;
-
-    @BelongsTo(() => User)
-    declare user: User;
-
-    @HasMany(() => BasketDevice)
-    declare basketDevices: BasketDevice[];
-}
-
-@Table({ tableName: 'basket_devices' })
-export class BasketDevice extends Model<BasketDevice> {
-    @PrimaryKey
-    @AutoIncrement
-    @Column(DataType.INTEGER)
-    declare id: number;
-
-    @ForeignKey(() => Basket)
-    @AllowNull(false)
-    @Column(DataType.INTEGER)
-    declare basketId: number;
-
-    @BelongsTo(() => Basket)
-    declare basket: Basket;
-
-    @ForeignKey(() => Device)
-    @AllowNull(false)
-    @Column(DataType.INTEGER)
-    declare deviceId: number;
-
-    @BelongsTo(() => Device)
-    declare device: Device;
 }
 
 @Table({ tableName: 'devices' })
@@ -115,11 +51,6 @@ export class Device extends Model<Device> {
     @AllowNull(false)
     @Column(DataType.INTEGER)
     declare price: number;
-
-    @Default(0)
-    @AllowNull(false)
-    @Column(DataType.INTEGER)
-    declare rating: number;
 
     @AllowNull(false)
     @Column(DataType.STRING)
@@ -143,9 +74,6 @@ export class Device extends Model<Device> {
 
     @HasMany(() => DeviceInfo)
     declare info: DeviceInfo[];
-
-    @HasMany(() => BasketDevice)
-    declare basketDevices: BasketDevice[];
 }
 
 @Table({ tableName: 'types' })
@@ -184,26 +112,6 @@ export class Brand extends Model<Brand> {
 
     @BelongsToMany(() => Type, () => TypeBrand)
     declare types: Type[];
-}
-
-@Table({ tableName: 'ratings' })
-export class Rating extends Model<Rating> {
-    @PrimaryKey
-    @AutoIncrement
-    @Column(DataType.INTEGER)
-    declare id: number;
-
-    @AllowNull(false)
-    @Column(DataType.INTEGER)
-    declare rate: number;
-
-    @ForeignKey(() => User)
-    @AllowNull(false)
-    @Column(DataType.INTEGER)
-    declare userId: number;
-
-    @BelongsTo(() => User)
-    declare user: User;
 }
 
 @Table({ tableName: 'device_infos' })

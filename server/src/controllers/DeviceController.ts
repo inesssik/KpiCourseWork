@@ -56,6 +56,16 @@ class DeviceController {
         res.json(devices);
     }
 
+    async delete(req: Request, res: Response, next: NextFunction) {
+        const { id } = req.query;
+        if (!id) return next(ApiError.badRequest('Введіть id!'));
+
+        await DeviceInfo.destroy({ where: { deviceId: String(id) } });
+        await Device.destroy({ where: { id: String(id) } });
+
+        res.status(200).json({ message: "Видалено!" });
+    }
+
     async getOne(req: Request, res: Response) {
         const { id } = req.params;
         const device = await Device.findOne({ where: { id }, include: [{ model: DeviceInfo, as: 'info' }] });

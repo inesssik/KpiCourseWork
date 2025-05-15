@@ -6,7 +6,7 @@ import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 
 const AppRouter = observer(() => {
-    const { user } = useContext(Context)
+    const { user } = useContext(Context);
     
     return (
         <Routes>

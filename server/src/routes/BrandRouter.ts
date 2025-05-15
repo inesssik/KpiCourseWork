@@ -5,6 +5,7 @@ import checkRoleMiddleware from '../middleware/checkRoleMiddleware.js';
 const router = Router();
 
 router.post('/', authMiddleware, checkRoleMiddleware('ADMIN'), BrandController.create);
+router.delete('/', authMiddleware, checkRoleMiddleware('ADMIN'), BrandController.delete);
 router.get('/', BrandController.getAll);
 
 export default router;

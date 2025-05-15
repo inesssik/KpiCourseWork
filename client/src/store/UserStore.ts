@@ -8,7 +8,7 @@ export interface IUser {
 
 export default class UserStore {
   @observable private _isAuth: boolean = false;
-  @observable private _user: IUser | {} = {};
+  @observable private _user: IUser = {};
 
   constructor() {
     makeObservable(this);
@@ -18,7 +18,7 @@ export default class UserStore {
     this._isAuth = value;
   }
 
-  @action public setUser(user: IUser | {}) {
+  @action public setUser(user: IUser) {
     this._user = user;
   }
 
@@ -26,7 +26,7 @@ export default class UserStore {
     return this._isAuth;
   }
 
-  @computed public get user(): IUser | {} {
+  @computed public get user(): IUser {
     return this._user;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext } from 'react';
 import { Navbar, Nav, Button, Col, Container } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Context } from '..';
@@ -6,18 +6,18 @@ import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/consts';
 import { observer } from 'mobx-react-lite';
 
 const NavBar = observer(() => {
-    const { user } = useContext(Context)
-    const history = useNavigate()
+    const { user } = useContext(Context);
+    const history = useNavigate();
 
     const logOut = () => {
-        user.setUser({})
-        user.setIsAuth(false)
-    }
+        user.setUser({});
+        user.setIsAuth(false);
+    };
 
     return (
         <Navbar bg="dark" variant="dark">
             <Container>
-                <Col><NavLink style={{ color: 'white' }} to={SHOP_ROUTE}>КупиДевайс</NavLink></Col>
+                <Col><NavLink style={{ color: 'white', textDecoration: 'none' }} to={SHOP_ROUTE}>Шопчік</NavLink></Col>
                 {user.isAuth ?
                     <Nav className="ml-auto" style={{ color: 'white' }}>
                         <Col>
@@ -32,7 +32,7 @@ const NavBar = observer(() => {
                             <Button
                                 variant={"outline-light"}
                                 onClick={() => logOut()}
-                                className="ml-2"
+                                style={{ marginLeft: '5px' }}
                             >
                                 Вийти
                             </Button>
@@ -45,7 +45,7 @@ const NavBar = observer(() => {
                 }
             </Container>
         </Navbar >
-    )
-})
+    );
+});
 
-export default NavBar
+export default NavBar;
