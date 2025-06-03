@@ -4,6 +4,7 @@ export interface IUser {
   id?: number;
   name?: string;
   email?: string;
+  role?: string;
 }
 
 export default class UserStore {
@@ -24,6 +25,10 @@ export default class UserStore {
 
   @computed public get isAuth(): boolean {
     return this._isAuth;
+  }
+
+  @computed public get isAdmin(): boolean {
+    return this._user.role === 'ADMIN';
   }
 
   @computed public get user(): IUser {

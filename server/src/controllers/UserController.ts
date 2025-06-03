@@ -24,7 +24,7 @@ class UserController {
 
     async login(req: Request, res: Response, next: NextFunction) {
         const { email, password } = req.body;
-        const user = await User.findOne(email);
+        const user = await User.findOne({ where: { email } });
         if (!user) return next(ApiError.internal('Користувач з таким email вже існує'));
 
         const validate = await bcrypt.compare(String(password), user.password);

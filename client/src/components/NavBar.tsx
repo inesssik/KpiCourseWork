@@ -10,6 +10,7 @@ const NavBar = observer(() => {
     const history = useNavigate();
 
     const logOut = () => {
+        localStorage.removeItem('token');
         user.setUser({});
         user.setIsAuth(false);
     };
@@ -19,30 +20,42 @@ const NavBar = observer(() => {
             <Container>
                 <Col><NavLink style={{ color: 'white', textDecoration: 'none' }} to={SHOP_ROUTE}>Шопчік</NavLink></Col>
                 {user.isAuth ?
-                    <Nav className="ml-auto" style={{ color: 'white' }}>
-                        <Col>
-                            <Button
-                                variant={"outline-light"}
-                                onClick={() => history(ADMIN_ROUTE)}
-                            >
-                                Адмінка
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                variant={"outline-light"}
-                                onClick={() => logOut()}
-                                style={{ marginLeft: '5px' }}
-                            >
-                                Вийти
-                            </Button>
-                        </Col>
-                    </Nav>
+                    user.isAdmin ?
+                        <Nav className="ml-auto" style={{ color: 'white' }}>
+                            <Col>
+                                <Button
+                                    variant={"outline-light"}
+                                    onClick={() => history(ADMIN_ROUTE)}
+                                >
+                                    Адмінка
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button
+                                    variant={"outline-light"}
+                                    onClick={() => logOut()}
+                                    style={{ marginLeft: '5px' }}
+                                >
+                                    Вийти
+                                </Button>
+                            </Col>
+                        </Nav>
+                        :
+                        <Nav className="ml-auto" style={{ color: 'white' }}>
+                            <Col>
+                                <Button
+                                    variant={"outline-light"}
+                                    onClick={() => logOut()}
+                                    style={{ marginLeft: '5px' }}
+                                >
+                                    Вийти
+                                </Button>
+                            </Col>
+                        </Nav>
                     :
                     <Nav className="ml-auto" style={{ color: 'white' }}>
                         <Col><Button variant={"outline-light"} onClick={() => history(LOGIN_ROUTE)}>Авторизація</Button></Col>
-                    </Nav>
-                }
+                    </Nav>}
             </Container>
         </Navbar >
     );
